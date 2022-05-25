@@ -2,21 +2,22 @@ package patterns.pageObjects;
 
 import com.codeborne.selenide.SelenideElement;
 import exampleClasses.User;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 public class MailPage {
-      public SelenideElement newsItemsTitle() {
-        return $("[data-testid=\"news-item-title\"]");
+    public SelenideElement newsItemsTitle() {
+        return $("[data-testid=\"news-item-tit1le\"]");
     }
 
     public SelenideElement loginField() {
-          return $("");
+        return $("");
     }
 
     public SelenideElement passwordField() {
-          return $("");
+        return $("");
     }
 
     public SelenideElement enterButton() {
@@ -24,17 +25,17 @@ public class MailPage {
     }
 
     public MailPage inputLogin(String login) {
-          loginField().shouldBe(visible).setValue(login);
-          return this;
+        loginField().shouldBe(visible).setValue(login);
+        return this;
     }
 
     public MailPage inputPassword(String password) {
-          passwordField().shouldBe(visible).setValue(password);
-          return this;
+        passwordField().shouldBe(visible).setValue(password);
+        return this;
     }
 
     public void pressEnter() {
-          enterButton().shouldBe(visible).click();
+        enterButton().shouldBe(visible).click();
     }
 
     public void login(String login, String password) {
@@ -43,10 +44,11 @@ public class MailPage {
         enterButton().shouldBe(visible).click();
     }
 
+    @Step("Логин пользователя {user}")
     public void login(User user) {
-        loginField().shouldBe(visible).setValue(user.login);
-        passwordField().shouldBe(visible).setValue(user.password);
-        enterButton().shouldBe(visible).click();
+//        loginField().shouldBe(visible).setValue(user.login);
+//        passwordField().shouldBe(visible).setValue(user.password);
+//        enterButton().shouldBe(visible).click();
     }
 
     public SelenideElement newsTab() {
@@ -61,27 +63,27 @@ public class MailPage {
         return $("");
     }
 
-    public  SelenideElement city() {
+    public SelenideElement city() {
         return $("");
     }
 
     public static class NewsPage {
-          public SelenideElement newsTab() {
-              return $("");
-          }
+        public SelenideElement newsTab() {
+            return $("");
+        }
 
-          public SelenideElement sportTab() {
-              return $("");
-          }
+        public SelenideElement sportTab() {
+            return $("");
+        }
 
-          public SelenideElement ladyTab() {
-              return $("");
-          }
+        public SelenideElement ladyTab() {
+            return $("");
+        }
     }
 
     class Weather {
-          public  SelenideElement city() {
-              return $("");
-          }
+        public SelenideElement city() {
+            return $("");
+        }
     }
 }

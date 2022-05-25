@@ -1,5 +1,6 @@
 package test;
 
+import com.codeborne.selenide.Configuration;
 import exampleClasses.*;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -14,6 +15,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import patterns.pageObjects.MailPage;
 
@@ -25,11 +27,10 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static exampleClasses.CatFactory.createCat;
-import static exampleClasses.CatType.DOMESTIC;
 import static exampleClasses.CatType.SIMPLE;
+import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -67,32 +68,43 @@ public class TestClass {
     }
 
     @Test
+    @Tag("tag")
     void testNegative() {
         //Arrange
+        Configuration.reportsFolder = "test-result/reports";
+        Configuration.screenshots = true;
         MailPage mailPage = new MailPage();
-        open("https://mail.ru/?from=logout");
         User aydar = new User();
         aydar.login = "Aydar@mail.ru";
         aydar.password = "Дико секретный пароль";
 
-        //Act
-        String text = mailPage.newsItemsTitle()
-                .shouldBe(visible)
-                .getText();
-
-        mailPage.inputLogin("Aydar@mail.ru")
-                .inputPassword("Дико секретный пароль")
-                .pressEnter();
+        step("Открыть страницу mail.ru", () -> {
+            open("https://mail.ru/?from=logout");
+        });
 
         mailPage.login(aydar);
 
-        mailPage.login("Aydar@mail.ru", "Дико секретный пароль");
+        //Act
+        step("Должен появиться заголовок новости", () -> {
+            String text = mailPage.newsItemsTitle()
+                    .shouldBe(visible)
+                    .getText();
 
-        mailPage.newsTab().click();
+//            new MailPage.NewsPage().newsTab().shouldBe(visible).click();
+            //Assert
+            assertTrue(text.contains("Медведч1ук"), "Текст на страничке был такой: " + text);
+        });
+//        mailPage.inputLogin("Aydar@mail.ru")
+//                .inputPassword("Дико секретный пароль")
+//                .pressEnter();
 
-        new MailPage.NewsPage().newsTab().shouldBe(visible).click();
-        //Assert
-        assertTrue(text.contains("Волод1ин"), "Текст на страничке был такой: " + text);
+
+//
+//        mailPage.login("Aydar@mail.ru", "Дико секретный пароль");
+//
+//        mailPage.newsTab().click();
+
+
     }
 
     @Test
@@ -105,10 +117,10 @@ public class TestClass {
     void rest() {
         given()
                 .basePath("")
-        .when()
+                .when()
                 .get("https://mail.ru/")
-                        .then()
-                                .statusCode(200);
+                .then()
+                .statusCode(200);
     }
 
     @Test
@@ -116,7 +128,6 @@ public class TestClass {
         SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(new TrustAllStrategy()).build();
 
         SSLConnectionSocketFactory factory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
-
 
 
         HttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()

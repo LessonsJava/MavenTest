@@ -125,11 +125,6 @@ public class TestClass {
 
     @Test
     void apacheClientTest() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException, IOException {
-        SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(new TrustAllStrategy()).build();
-
-        SSLConnectionSocketFactory factory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
-
-
         HttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
                 .build();
 
